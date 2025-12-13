@@ -72,7 +72,7 @@ final class CoinImageViewModelTests: XCTestCase {
         // then
         XCTAssertNil(sut.image, "Should not return an image.")
         XCTAssertNotNil(sut.errMsg, "Should return an error.")
-        XCTAssertTrue(sut.errMsg!.contains("500"), "Should contain the error code 500")
+        XCTAssertTrue(sut.errMsg!.contains("500"), "Should contain the error code 500.")
         XCTAssertFalse(sut.isLoading, "Should finish loading state. [\(sut.isLoading)]")
     }
 }

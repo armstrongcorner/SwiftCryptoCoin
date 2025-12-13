@@ -46,6 +46,7 @@ class CoinImageViewModel: ObservableObject {
                 }
             } receiveValue: { [weak self] returnedImg in
                 self?.image = returnedImg
+                self?.errMsg = nil
             }
             .store(in: &cancellables)
     }

@@ -22,9 +22,9 @@ final class MarketDataServiceTests: XCTestCase {
     }
 
     override func tearDownWithError() throws {
+//        sut = nil
         cancellables = nil
         mockNetworkingManager = nil
-//        sut = nil
         
         try super.tearDownWithError()
     }
@@ -34,48 +34,67 @@ final class MarketDataServiceTests: XCTestCase {
         let globalDataToBinary = try JSONEncoder().encode(mockGlobalData)
         mockNetworkingManager = MockNetworkingManager(mockType: .success(globalDataToBinary))
         sut = MarketDataService(networkingManager: mockNetworkingManager)
-        var received: MarketDataModel?
+        var receivedMarketData: MarketDataModel?
+        var receivedError: Error?
         
         let exp = expectation(description: "wait for fetching global market data...")
         
         // when
-        sut.$marketData
-            .dropFirst()
-            .sink { marketData in
-                received = marketData
+        sut.getMarketData()
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    receivedError = error
+                    XCTFail("Should not have received an error. Received: \(error)")
+                }
+                
                 exp.fulfill()
+            } receiveValue: { marketData in
+                receivedMarketData = marketData
             }
             .store(in: &cancellables)
         
         wait(for: [exp], timeout: 1.0)
         
         // then
-        XCTAssertEqual(received?.marketCap, mockGlobalData.data?.marketCap, "Received market cap String should be same with computed mock data")
-        XCTAssertEqual(received?.volume, mockGlobalData.data?.volume, "Received volume String should be same with computed mock data")
-        XCTAssertEqual(received?.btcDominance, mockGlobalData.data?.btcDominance, "Received btc dominance String should be same with computed mock data")
+        XCTAssertNil(receivedError, "Should not have received an error.")
+        XCTAssertEqual(receivedMarketData?.marketCap, mockGlobalData.data?.marketCap, "Received market cap String should be same with computed mock data")
+        XCTAssertEqual(receivedMarketData?.volume, mockGlobalData.data?.volume, "Received volume String should be same with computed mock data")
+        XCTAssertEqual(receivedMarketData?.btcDominance, mockGlobalData.data?.btcDominance, "Received btc dominance String should be same with computed mock data")
     }
     
-    func testGetMarketDataFailure() throws {
+    func testGetMarketDataFailed() throws {
         // given
         mockNetworkingManager = MockNetworkingManager(mockType: .failure(NetworkingError.invalidResponse(500)))
         sut = MarketDataService(networkingManager: mockNetworkingManager)
-        var received: MarketDataModel?
+        var receivedMarketData: MarketDataModel?
+        var receivedError: Error?
         
         let exp = expectation(description: "wait for fetching global market data...")
-        exp.isInverted = true
         
         // when
-        sut.$marketData
-            .dropFirst()
-            .sink { marketData in
-                received = marketData
+        sut.getMarketData()
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    receivedError = error
+                }
+                
                 exp.fulfill()
+            } receiveValue: { marketData in
+                receivedMarketData = marketData
             }
             .store(in: &cancellables)
         
         wait(for: [exp], timeout: 1.0)
         
         // then
-        XCTAssertNil(received, "Should not return any global market data")
+        XCTAssertNil(receivedMarketData, "Should not return any global market data.")
+        XCTAssertNotNil(receivedError, "Should return an error.")
+        XCTAssertTrue(receivedError!.localizedDescription.contains("500"), "Should return an error with status code 500.")
     }
 }

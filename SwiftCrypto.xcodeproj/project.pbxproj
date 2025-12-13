@@ -53,6 +53,12 @@
 		AE8666092ED994D900B48CA5 /* PortfolioDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8666082ED994D900B48CA5 /* PortfolioDataService.swift */; };
 		AE86660B2ED9A1EA00B48CA5 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE86660A2ED9A1EA00B48CA5 /* DatabaseManager.swift */; };
 		AE86660E2EDBC5B300B48CA5 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE86660D2EDBC5B300B48CA5 /* HapticManager.swift */; };
+		AE99938F2EEBB33D00B7C404 /* MockCoinDetailDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99938E2EEBB33D00B7C404 /* MockCoinDetailDataService.swift */; };
+		AE9993932EEBC05300B7C404 /* CoinDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9993922EEBC05300B7C404 /* CoinDetailViewModelTests.swift */; };
+		AE9993952EEBE5E900B7C404 /* MockMarketDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9993942EEBE5E900B7C404 /* MockMarketDataService.swift */; };
+		AE9993972EEC17C000B7C404 /* MockCoinDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9993962EEC17C000B7C404 /* MockCoinDataService.swift */; };
+		AE9993992EED192700B7C404 /* HomeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9993982EED192700B7C404 /* HomeViewModelTests.swift */; };
+		AE99939B2EED6CE000B7C404 /* PortfolioEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99939A2EED6CE000B7C404 /* PortfolioEntry.swift */; };
 		AE9D5A5C2ECF175C0050E84E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE9D5A582ECF175C0050E84E /* Assets.xcassets */; };
 		AE9D5A5D2ECF175C0050E84E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9D5A592ECF175C0050E84E /* ContentView.swift */; };
 		AE9D5A5E2ECF175C0050E84E /* SwiftCryptoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9D5A5A2ECF175C0050E84E /* SwiftCryptoApp.swift */; };
@@ -128,6 +134,12 @@
 		AE8666082ED994D900B48CA5 /* PortfolioDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioDataService.swift; sourceTree = "<group>"; };
 		AE86660A2ED9A1EA00B48CA5 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		AE86660D2EDBC5B300B48CA5 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		AE99938E2EEBB33D00B7C404 /* MockCoinDetailDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCoinDetailDataService.swift; sourceTree = "<group>"; };
+		AE9993922EEBC05300B7C404 /* CoinDetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinDetailViewModelTests.swift; sourceTree = "<group>"; };
+		AE9993942EEBE5E900B7C404 /* MockMarketDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMarketDataService.swift; sourceTree = "<group>"; };
+		AE9993962EEC17C000B7C404 /* MockCoinDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCoinDataService.swift; sourceTree = "<group>"; };
+		AE9993982EED192700B7C404 /* HomeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModelTests.swift; sourceTree = "<group>"; };
+		AE99939A2EED6CE000B7C404 /* PortfolioEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioEntry.swift; sourceTree = "<group>"; };
 		AE9D5A2E2ECF17500050E84E /* SwiftCrypto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftCrypto.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE9D5A3B2ECF17520050E84E /* SwiftCryptoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftCryptoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE9D5A452ECF17520050E84E /* SwiftCryptoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftCryptoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -228,8 +240,9 @@
 				AE38B7D92ED262D800A4F94F /* Services */,
 				AE38B7C42ED1529600A4F94F /* CoinModel.swift */,
 				AEE7A00E2EDD85D8009B495D /* CoinDetailModel.swift */,
-				AE38B7EB2ED4673100A4F94F /* StatisticModel.swift */,
 				AE38B7F12ED6662100A4F94F /* MarketDataModel.swift */,
+				AE38B7EB2ED4673100A4F94F /* StatisticModel.swift */,
+				AE99939A2EED6CE000B7C404 /* PortfolioEntry.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -285,6 +298,9 @@
 				AE7613402EE57CDF00757AC6 /* MockNetworkingManager.swift */,
 				AE76134C2EE808F600757AC6 /* MockLocalFileManager.swift */,
 				AE76134E2EE933D100757AC6 /* MockImageService.swift */,
+				AE99938E2EEBB33D00B7C404 /* MockCoinDetailDataService.swift */,
+				AE9993942EEBE5E900B7C404 /* MockMarketDataService.swift */,
+				AE9993962EEC17C000B7C404 /* MockCoinDataService.swift */,
 			);
 			path = Mock;
 			sourceTree = "<group>";
@@ -324,6 +340,8 @@
 			isa = PBXGroup;
 			children = (
 				AE7613502EE964BE00757AC6 /* CoinImageViewModelTests.swift */,
+				AE9993922EEBC05300B7C404 /* CoinDetailViewModelTests.swift */,
+				AE9993982EED192700B7C404 /* HomeViewModelTests.swift */,
 			);
 			path = "ViewModel Tests";
 			sourceTree = "<group>";
@@ -573,18 +591,22 @@
 				AE9D5A5E2ECF175C0050E84E /* SwiftCryptoApp.swift in Sources */,
 				AE30802D2EDC4907008105B9 /* CoinDetailView.swift in Sources */,
 				AE86660E2EDBC5B300B48CA5 /* HapticManager.swift in Sources */,
+				AE9993952EEBE5E900B7C404 /* MockMarketDataService.swift in Sources */,
 				AE38B7EE2ED467F000A4F94F /* StatisticView.swift in Sources */,
+				AE99939B2EED6CE000B7C404 /* PortfolioEntry.swift in Sources */,
 				AE38B7F82ED6F41700A4F94F /* CloseButton.swift in Sources */,
 				AE38B7C02ED1078E00A4F94F /* CircleButtonView.swift in Sources */,
 				AE76134F2EE933D100757AC6 /* MockImageService.swift in Sources */,
 				AE86660B2ED9A1EA00B48CA5 /* DatabaseManager.swift in Sources */,
 				AE38B7CF2ED1BC3400A4F94F /* HomeViewModel.swift in Sources */,
 				AE38B7FA2ED6FAD800A4F94F /* CoinLogoView.swift in Sources */,
+				AE9993972EEC17C000B7C404 /* MockCoinDataService.swift in Sources */,
 				AE0D672C2EE2CA9100D804A3 /* LaunchView.swift in Sources */,
 				AE76134D2EE808F600757AC6 /* MockLocalFileManager.swift in Sources */,
 				AE38B7EA2ED3D0B600A4F94F /* UIApplication.swift in Sources */,
 				AEE7A0112EDD8E34009B495D /* CoinDetailDataService.swift in Sources */,
 				AEE7A0152EDD974B009B495D /* CoinDetailViewModel.swift in Sources */,
+				AE99938F2EEBB33D00B7C404 /* MockCoinDetailDataService.swift in Sources */,
 				AE9D5A612ECF1BF10050E84E /* Color.swift in Sources */,
 				AE38B7E22ED2BA3F00A4F94F /* ImageService.swift in Sources */,
 				AE38B7C22ED1167000A4F94F /* CircleButtonAnimationView.swift in Sources */,
@@ -602,7 +624,9 @@
 				AE7613432EE57FFA00757AC6 /* CoinDataServiceTests.swift in Sources */,
 				AE7613472EE6D33F00757AC6 /* MarketDataServiceTests.swift in Sources */,
 				AE76133F2EE4DCCC00757AC6 /* NetworkManagerTests.swift in Sources */,
+				AE9993992EED192700B7C404 /* HomeViewModelTests.swift in Sources */,
 				AE7613492EE7B2C100757AC6 /* LocalFileManagerTests.swift in Sources */,
+				AE9993932EEBC05300B7C404 /* CoinDetailViewModelTests.swift in Sources */,
 				AE7613452EE6B70500757AC6 /* CoinDetailDataServiceTests.swift in Sources */,
 				AE7613512EE964BE00757AC6 /* CoinImageViewModelTests.swift in Sources */,
 				AE76134B2EE8063E00757AC6 /* ImageServiceTests.swift in Sources */,

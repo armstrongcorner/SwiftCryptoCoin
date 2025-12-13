@@ -9,33 +9,31 @@ import Foundation
 import Combine
 
 protocol MarketDataServiceProtocol {
-    func getMarketData()
+    func getMarketData() -> AnyPublisher<MarketDataModel?, Error>
 }
 
 class MarketDataService: MarketDataServiceProtocol {
     private let networkingManager: NetworkingManagerProtocol
-    @Published var marketData: MarketDataModel? = nil
-    
-    var marketDataSubscription: AnyCancellable?
-    
+        
     init(networkingManager: NetworkingManagerProtocol = NetworkingManager()) {
         self.networkingManager = networkingManager
-        getMarketData()
     }
     
-    func getMarketData() {
-        let urlString = "https://api.coingecko.com/api/v3/global"
-        
+    func getMarketData() -> AnyPublisher<MarketDataModel?, Error> {
         do {
-            marketDataSubscription = try networkingManager.request(urlString: urlString, method: .get, headers: ["x-cg-demo-api-key" : Constants.authToken])
+            let urlString = "https://api.coingecko.com/api/v3/global"
+            
+            let publisher = try networkingManager.request(urlString: urlString, method: .get, headers: ["x-cg-demo-api-key" : Constants.authToken])
                 .decode(type: GlobalData.self, decoder: JSONDecoder())
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: NetworkingManager.handleCompletion, receiveValue: { [weak self] returnedGlobalData in
-                    self?.marketData = returnedGlobalData.data
-                    self?.marketDataSubscription?.cancel()
-                })
+                .tryMap { globalData -> MarketDataModel? in
+                    globalData.data
+                }
+                .eraseToAnyPublisher()
+            return publisher
         } catch (let error) {
             print(error.localizedDescription)
+            return Fail(error: error)
+                .eraseToAnyPublisher()
         }
     }
 }

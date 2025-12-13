@@ -51,7 +51,7 @@ extension NetworkingManagerProtocol {
         headers: [String: String]? = nil,
         timeout: TimeInterval? = nil
     ) throws -> AnyPublisher<Data, Error> {
-        try request(urlString: urlString, method: method, headers: headers, timeout: nil)
+        try request(urlString: urlString, method: method, headers: headers, timeout: timeout)
     }
 }
 
@@ -100,14 +100,5 @@ class NetworkingManager: NetworkingManagerProtocol {
         }
         
         return output.data
-    }
-    
-    static func handleCompletion(completion: Subscribers.Completion<Error>) {
-        switch completion {
-        case .finished:
-            break
-        case .failure(let error):
-            print("error: \(error.localizedDescription)")
-        }
     }
 }

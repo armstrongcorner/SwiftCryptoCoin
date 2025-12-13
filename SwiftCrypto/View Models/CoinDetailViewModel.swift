@@ -17,36 +17,82 @@ class CoinDetailViewModel: ObservableObject {
     @Published var homePageUrlString: String? = nil
     @Published var subredditUrlString: String? = nil
     
+    @Published var isLoading: Bool = false
+    @Published var errMsg: String? = nil
+    
     let coin: CoinModel
-    private let coinDetailDataService = CoinDetailDataService()
+    private let coinDetailDataService: CoinDetailDataServiceProtocol
+    
     private var cancellables = Set<AnyCancellable>()
     
-    init(coin: CoinModel) {
+    init(coin: CoinModel, coinDetailDataService: CoinDetailDataServiceProtocol = CoinDetailDataService()) {
         self.coin = coin
-        
-        // Make the request first
-        coinDetailDataService.getCoinDetail(by: coin.id)
+        self.coinDetailDataService = coinDetailDataService
         
         addSubscribers()
     }
     
     private func addSubscribers() {
-        coinDetailDataService.$coinDetail
-            .map(mapDetailsToStatistics)
-            .sink(receiveValue: { [weak self] (overview: [StatisticModel], additional: [StatisticModel]) in
+        isLoading = true
+        errMsg = nil
+        
+        // Make the shared publisher
+        let sharedPublisher = coinDetailDataService.getCoinDetail(coinId: coin.id)
+            .share()
+            .eraseToAnyPublisher()
+        
+        sharedPublisher
+            .map { [weak self] detail -> (overview: [StatisticModel], additional: [StatisticModel]) in
+                guard let self else {
+                    return (overview: [], additional: [])
+                }
+                return self.mapDetailsToStatistics(coinDetailModel: detail)
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
                 guard let self else { return }
+                self.isLoading = false
+                
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    self.errMsg = error.localizedDescription
+                    
+                    self.overviewStatistics = []
+                    self.additionalStatistics = []
+                }
+            } receiveValue: { [weak self] (overview: [StatisticModel], additional: [StatisticModel]) in
+                guard let self else { return }
+                self.isLoading = false
                 self.overviewStatistics = overview
                 self.additionalStatistics = additional
-            })
+            }
             .store(in: &cancellables)
         
-        coinDetailDataService.$coinDetail
-            .sink(receiveValue: { [weak self] coinDetail in
+        sharedPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
                 guard let self else { return }
+                self.isLoading = false
+                
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    self.errMsg = error.localizedDescription
+                    
+                    self.description = nil
+                    self.homePageUrlString = nil
+                    self.subredditUrlString = nil
+                }
+            } receiveValue: { [weak self] coinDetail in
+                guard let self else { return }
+                self.isLoading = false
                 self.description = coinDetail?.description?.en
                 self.homePageUrlString = coinDetail?.links?.homepage?.first
                 self.subredditUrlString = coinDetail?.links?.subredditURL
-            })
+            }
             .store(in: &cancellables)
     }
     

@@ -19,17 +19,26 @@ class HomeViewModel: ObservableObject {
     @Published var portfolioCoins: [CoinModel] = []
     @Published var homeStats: [StatisticModel] = []
     
-    @Published var isLoading: Bool = false
     @Published var searchText: String = ""
     @Published var sortOption: SortOption = .holdings
+    @Published var isLoading: Bool = false
+    @Published var errMsg: String? = nil
     
-    private let coinDataService = CoinDataService()
-    private let marketDataService = MarketDataService()
+    private let coinDataService: CoinDataServiceProtocol
+    private let marketDataService: MarketDataServiceProtocol
     var portfolioDataService: PortfolioDataService
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(portfolioDataService: PortfolioDataService = PortfolioDataService()) {
+    private let reloadTrigger = PassthroughSubject<Void, Never>()
+    
+    init(
+        coinDataService: CoinDataServiceProtocol = CoinDataService(),
+        marketDataService: MarketDataServiceProtocol = MarketDataService(),
+        portfolioDataService: PortfolioDataService = PortfolioDataService()
+    ) {
+        self.coinDataService = coinDataService
+        self.marketDataService = marketDataService
         self.portfolioDataService = portfolioDataService
         
         addSubscribers()
@@ -37,13 +46,31 @@ class HomeViewModel: ObservableObject {
     
     func addSubscribers() {
         isLoading = true
+        errMsg = nil
         
-        // update allCoins
-        $searchText.combineLatest(coinDataService.$allCoins, $sortOption)
+        // get,filter and sort allCoins
+        reloadTrigger
+            .prepend(())
+            .flatMap { [weak self] _ -> AnyPublisher<[CoinModel], Never> in
+                guard let self else {
+                    return Just([]).eraseToAnyPublisher()
+                }
+                return self.coinDataService.getCoins()
+                    .catch { [weak self] error -> Just<[CoinModel]> in
+                        self?.errMsg = error.localizedDescription
+                        return Just([])
+                    }
+                    .eraseToAnyPublisher()
+            }
+            .share()
+            .prepend([])
+            .combineLatest($searchText, $sortOption)
             .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
             .map(filterAndSortCoins)
-            .sink { [weak self] searchResultCoins in
-                self?.allCoins = searchResultCoins
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] coins in
+                self?.isLoading = false
+                self?.allCoins = coins
             }
             .store(in: &cancellables)
         
@@ -57,9 +84,24 @@ class HomeViewModel: ObservableObject {
             .store(in: &cancellables)
 
         // get market data
-        marketDataService.$marketData
+        reloadTrigger
+            .prepend(())
+            .flatMap { [weak self] _ -> AnyPublisher<MarketDataModel?, Never> in
+                guard let self else {
+                    return Just(nil)
+                        .eraseToAnyPublisher()
+                }
+                return self.marketDataService.getMarketData()
+                    .catch { [weak self] error -> Just<MarketDataModel?> in
+                        self?.errMsg = error.localizedDescription
+                        return Just(nil)
+                    }
+                    .eraseToAnyPublisher()
+            }
+            .prepend(nil)
             .combineLatest($portfolioCoins)
             .map(mapGlobalMarketData)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] returnedHomeStats in
                 self?.isLoading = false
                 self?.homeStats = returnedHomeStats
@@ -73,15 +115,14 @@ class HomeViewModel: ObservableObject {
     
     func reloadData() {
         isLoading = true
-        
-        coinDataService.getCoins()
-        marketDataService.getMarketData()
-        
+        errMsg = nil
+        reloadTrigger.send(())
+
         HapticManager.instance.notification(type: .success)
     }
     
     // MARK: - Private functions
-    private func filterAndSortCoins(searchText: String, allCoins: [CoinModel], sort: SortOption) -> [CoinModel] {
+    private func filterAndSortCoins(allCoins: [CoinModel], searchText: String, sort: SortOption) -> [CoinModel] {
         var updatedCoins = filterCoins(searchText: searchText, allCoins: allCoins)
         sortAllCoins(sort: sort, coins: &updatedCoins)
         
@@ -95,11 +136,11 @@ class HomeViewModel: ObservableObject {
         
         let lowerCasedText = searchText.lowercased()
         
-        return allCoins.filter({
+        return allCoins.filter {
             $0.name.lowercased().contains(lowerCasedText)
             || $0.id.lowercased().contains(lowerCasedText)
             || $0.symbol.lowercased().contains(lowerCasedText)
-        })
+        }
     }
     
     private func sortAllCoins(sort: SortOption, coins: inout [CoinModel]) {
