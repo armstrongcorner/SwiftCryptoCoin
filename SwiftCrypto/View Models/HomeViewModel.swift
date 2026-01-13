@@ -75,13 +75,13 @@ class HomeViewModel: ObservableObject {
             .store(in: &cancellables)
         
         // get portfolio data
-        $allCoins.combineLatest(portfolioDataService.$portfolioEntities)
-            .map(mapPortfolioData)
-            .sink { [weak self] returnedCoins in
-                guard let self else { return }
-                self.portfolioCoins = self.sortPortfolioCoins(portfolioCoins: returnedCoins)
-            }
-            .store(in: &cancellables)
+//        $allCoins.combineLatest(portfolioDataService.$portfolioEntities)
+//            .map(mapPortfolioData)
+//            .sink { [weak self] returnedCoins in
+//                guard let self else { return }
+//                self.portfolioCoins = self.sortPortfolioCoins(portfolioCoins: returnedCoins)
+//            }
+//            .store(in: &cancellables)
 
         // get market data
         reloadTrigger

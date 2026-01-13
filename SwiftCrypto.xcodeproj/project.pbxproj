@@ -59,6 +59,7 @@
 		AE9993972EEC17C000B7C404 /* MockCoinDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9993962EEC17C000B7C404 /* MockCoinDataService.swift */; };
 		AE9993992EED192700B7C404 /* HomeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9993982EED192700B7C404 /* HomeViewModelTests.swift */; };
 		AE99939B2EED6CE000B7C404 /* PortfolioEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99939A2EED6CE000B7C404 /* PortfolioEntry.swift */; };
+		AE99939D2EEE05DC00B7C404 /* PortfolioDataService.bak in Sources */ = {isa = PBXBuildFile; fileRef = AE99939C2EEE05DC00B7C404 /* PortfolioDataService.bak */; };
 		AE9D5A5C2ECF175C0050E84E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE9D5A582ECF175C0050E84E /* Assets.xcassets */; };
 		AE9D5A5D2ECF175C0050E84E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9D5A592ECF175C0050E84E /* ContentView.swift */; };
 		AE9D5A5E2ECF175C0050E84E /* SwiftCryptoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9D5A5A2ECF175C0050E84E /* SwiftCryptoApp.swift */; };
@@ -140,6 +141,7 @@
 		AE9993962EEC17C000B7C404 /* MockCoinDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCoinDataService.swift; sourceTree = "<group>"; };
 		AE9993982EED192700B7C404 /* HomeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModelTests.swift; sourceTree = "<group>"; };
 		AE99939A2EED6CE000B7C404 /* PortfolioEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioEntry.swift; sourceTree = "<group>"; };
+		AE99939C2EEE05DC00B7C404 /* PortfolioDataService.bak */ = {isa = PBXFileReference; lastKnownFileType = text; path = PortfolioDataService.bak; sourceTree = "<group>"; };
 		AE9D5A2E2ECF17500050E84E /* SwiftCrypto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftCrypto.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE9D5A3B2ECF17520050E84E /* SwiftCryptoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftCryptoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE9D5A452ECF17520050E84E /* SwiftCryptoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftCryptoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -364,6 +366,7 @@
 				AE38B7E52ED304CC00A4F94F /* LocalFileManager.swift */,
 				AE86660A2ED9A1EA00B48CA5 /* DatabaseManager.swift */,
 				AE8666082ED994D900B48CA5 /* PortfolioDataService.swift */,
+				AE99939C2EEE05DC00B7C404 /* PortfolioDataService.bak */,
 				AE8666052ED9933800B48CA5 /* CryptoCoinContainer.xcdatamodeld */,
 			);
 			path = Local;
@@ -569,6 +572,7 @@
 				AE38B7C92ED17A0300A4F94F /* CoinRowView.swift in Sources */,
 				AE9D5A5D2ECF175C0050E84E /* ContentView.swift in Sources */,
 				AE7613412EE57CDF00757AC6 /* MockNetworkingManager.swift in Sources */,
+				AE99939D2EEE05DC00B7C404 /* PortfolioDataService.bak in Sources */,
 				AE38B7DB2ED262F200A4F94F /* CoinDataService.swift in Sources */,
 				AE38B7DD2ED29A7900A4F94F /* NetworkingManager.swift in Sources */,
 				AE0D67262EE21DA100D804A3 /* InfoView.swift in Sources */,

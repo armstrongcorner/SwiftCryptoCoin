@@ -9,46 +9,18 @@ import Foundation
 import CoreData
 import Combine
 
-protocol PortfolioDataServiceProtocol {
-    func getPortfolioEntries() -> AnyPublisher<[PortfolioEntry], Error>
-    func updatePortfolio(coin: CoinModel, amount: Double)
-}
-
-class PortfolioDataService: PortfolioDataServiceProtocol {
+class PortfolioDataService {
     private let dbManager: DatabaseManager
+    @Published var portfolioEntities: [PortfolioEntity] = []
     
     init(inMemory: Bool = false) {
         dbManager = inMemory ? DatabaseManager.previewInstance : DatabaseManager.instance
+        self.getPortfolio()
     }
     
     // MARK: - Public functions
-    func getPortfolioEntries() -> AnyPublisher<[PortfolioEntry], Error> {
-        Deferred { [weak self] in
-            Future<[PortfolioEntry], Error> { promise in
-                guard let self else {
-                    promise(.success([]))
-                    return
-                }
-                
-                let request = NSFetchRequest<PortfolioEntity>(entityName: "PortfolioEntity")
-                do {
-                    let portfolioEntities = try self.dbManager.context.fetch(request)
-                    let entries = portfolioEntities.compactMap({ entity -> PortfolioEntry? in
-                        guard let id = entity.coinID else { return nil }
-                        return PortfolioEntry(id: id, amount: entity.amount)
-                    })
-                    return promise(.success(entries))
-                } catch let error {
-                    print("Error fetching Portfolio Entities: \(error)")
-                    promise(.failure(error))
-                }
-            }
-        }
-        .eraseToAnyPublisher()
-    }
-    
     func updatePortfolio(coin: CoinModel, amount: Double) {
-        if let portfolioEntities = getPortfolio(), let foundEntity = portfolioEntities.first(where: { $0.coinID == coin.id }) {
+        if let foundEntity = portfolioEntities.first(where: { $0.coinID == coin.id }) {
             // Found in the saved portfolio entities
             if amount > 0 {
                 // update
@@ -64,14 +36,12 @@ class PortfolioDataService: PortfolioDataServiceProtocol {
     }
     
     // MARK: - Private functions
-    private func getPortfolio() -> [PortfolioEntity]? {
+    private func getPortfolio() {
         let request = NSFetchRequest<PortfolioEntity>(entityName: "PortfolioEntity")
         do {
-            let portfolioEntities = try dbManager.context.fetch(request)
-            return portfolioEntities
+            portfolioEntities = try dbManager.context.fetch(request)
         } catch let error {
             print("Error fetching Portfolio Entities: \(error)")
-            return nil
         }
     }
     
